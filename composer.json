@@ -1,5 +1,5 @@
 {
-  "name": "rhubarbphp/Scaffold.Authentication",
+  "name": "rhubarbphp/scaffold-authentication-with-roles",
   "description": "Extends the basic authentication scaffold with groups and role based permissions.",
   "keywords": [ "authentication", "rhubarb", "php", "framework" ],
   "homepage": "http://www.rhubarbphp.com/",
