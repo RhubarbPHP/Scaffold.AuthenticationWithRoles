@@ -1,0 +1,25 @@
+{
+  "name": "rhubarbphp/Scaffold.Authentication",
+  "description": "Extends the basic authentication scaffold with groups and role based permissions.",
+  "keywords": [ "authentication", "rhubarb", "php", "framework" ],
+  "homepage": "http://www.rhubarbphp.com/",
+  "license": "Apache-2.0",
+  "autoload": {
+    "psr-4": {
+      "Rhubarb\\Scaffolds\\AuthenticationWithRoles\\": "src/",
+      "Rhubarb\\Scaffolds\\AuthenticationWithRoles\\Tests\\": "tests/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/acuthbert/rhubarb"
+    }
+  ],
+  "require": {
+    "rhubarbphp/rhubarb": "dev-crown"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "3.*"
+  }
+}
