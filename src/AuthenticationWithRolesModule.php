@@ -18,23 +18,23 @@
 
 namespace Rhubarb\Scaffolds\AuthenticationWithRoles;
 
-use Rhubarb\Stem\Schema\SolutionSchema;
 use Rhubarb\Scaffolds\Authentication\AuthenticationModule;
+use Rhubarb\Stem\Schema\SolutionSchema;
 
 /**
  * Adds the security groups and security options to the base login scaffold
  */
 class AuthenticationWithRolesModule extends AuthenticationModule
 {
-	public function __construct( $loginProviderClassName = null  )
-	{
-		parent::__construct( $loginProviderClassName );
-	}
+    public function __construct($loginProviderClassName = null, $urlToProtect = "/")
+    {
+        parent::__construct($loginProviderClassName, $urlToProtect);
+    }
 
-	public function initialise()
-	{
-		parent::initialise();
+    public function initialise()
+    {
+        parent::initialise();
 
-		SolutionSchema::registerSchema( "Authentication", __NAMESPACE__.'\DatabaseSchema' );
-	}
+        SolutionSchema::registerSchema("Authentication", __NAMESPACE__ . '\DatabaseSchema');
+    }
 }
