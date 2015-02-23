@@ -10,19 +10,9 @@
       "Rhubarb\\Scaffolds\\AuthenticationWithRoles\\Tests\\": "tests/"
     }
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/acuthbert/rhubarb"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/rhubarbphp/Scaffold.Authentication"
-    }
-  ],
   "require": {
-    "rhubarbphp/rhubarb": "dev-crown",
-    "rhubarbphp/scaffold-authentication": "dev-feature/MigrationFromCore"
+    "rhubarbphp/rhubarb": "*",
+    "rhubarbphp/scaffold-authentication": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "3.*"
