@@ -20,7 +20,7 @@ namespace Rhubarb\Scaffolds\AuthenticationWithRoles;
 
 use Rhubarb\Stem\Filters\Equals;
 use Rhubarb\Stem\Filters\OrGroup;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\ForeignKey;
+use Rhubarb\Stem\Schema\Columns\ForeignKey;
 use Rhubarb\Stem\Schema\ModelSchema;
 
 class User extends \Rhubarb\Scaffolds\Authentication\User

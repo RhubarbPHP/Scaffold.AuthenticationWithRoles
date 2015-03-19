@@ -19,20 +19,20 @@
 namespace Rhubarb\Scaffolds\AuthenticationWithRoles;
 
 use Rhubarb\Stem\Models\Model;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\AutoIncrement;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\ForeignKey;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\Varchar;
-use Rhubarb\Stem\Repositories\MySql\Schema\MySqlSchema;
+use Rhubarb\Stem\Schema\Columns\AutoIncrement;
+use Rhubarb\Stem\Schema\Columns\ForeignKey;
+use Rhubarb\Stem\Schema\Columns\String;
+use Rhubarb\Stem\Schema\ModelSchema;
 
 class Permission extends Model
 {
     protected function createSchema()
     {
-        $schema = new MySqlSchema("tblAuthenticationPermission");
+        $schema = new ModelSchema("tblAuthenticationPermission");
         $schema->addColumn(
             new AutoIncrement("PermissionID"),
-            new Varchar("PermissionName", 250),
-            new Varchar("PermissionPath", 250),
+            new String("PermissionName", 250),
+            new String("PermissionPath", 250),
             new ForeignKey("ParentPermissionID")
         );
 
