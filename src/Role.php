@@ -60,7 +60,7 @@ class Role extends Model
              */
             $permissionPathParts = preg_split('|[\/]+|', $permissionPath);
             $permissionPathPartsString = "";
-            $filters = array();
+            $filters = [];
 
             foreach ($permissionPathParts as $pathPart) {
                 $permissionPathPartsString .= (strlen($permissionPathPartsString) > 0 ? "/" : "") . $pathPart;

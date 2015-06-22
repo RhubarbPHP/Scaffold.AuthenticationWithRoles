@@ -8,192 +8,191 @@ use Rhubarb\Crown\UnitTesting\CoreTestCase;
 
 class UserTest extends CoreTestCase
 {
-	protected function setUp()
-	{
-		parent::setUp();
+    protected function setUp()
+    {
+        parent::setUp();
 
-		User::ClearObjectCache();
-		Role::ClearObjectCache();
-		UserRole::ClearObjectCache();
-		Permission::ClearObjectCache();
-		PermissionAssignment::ClearObjectCache();
-	}
+        User::ClearObjectCache();
+        Role::ClearObjectCache();
+        UserRole::ClearObjectCache();
+        Permission::ClearObjectCache();
+        PermissionAssignment::ClearObjectCache();
+    }
 
-	public function testRoleCanBeAdded()
-	{
-		$role = new Role();
-		$role->RoleName = "Roll";
-		$role->Save();
+    public function testRoleCanBeAdded()
+    {
+        $role = new Role();
+        $role->RoleName = "Roll";
+        $role->Save();
 
-		$user = new User();
-		$user->Username = "bob";
-		$user->Forename = "bob";
-		$user->Save();
-		$user->AddToRole( $role );
+        $user = new User();
+        $user->Username = "bob";
+        $user->Forename = "bob";
+        $user->Save();
+        $user->AddToRole($role);
 
-		$this->assertCount( 1, UserRole::Find() );
-		$this->assertEquals( $user->UniqueIdentifier, UserRole::Find()[0]->UserID );
-		$this->assertEquals( $role->UniqueIdentifier, UserRole::Find()[0]->RoleID );
-	}
+        $this->assertCount(1, UserRole::Find());
+        $this->assertEquals($user->UniqueIdentifier, UserRole::Find()[0]->UserID);
+        $this->assertEquals($role->UniqueIdentifier, UserRole::Find()[0]->RoleID);
+    }
 
-	public function testSeparateRolesCanBeAdded()
-	{
-		$role = new Role();
-		$role->RoleName = "Roll";
-		$role->Save();
+    public function testSeparateRolesCanBeAdded()
+    {
+        $role = new Role();
+        $role->RoleName = "Roll";
+        $role->Save();
 
-		$role2 = new Role();
-		$role2->RoleName = "EggRoll";
-		$role2->Save();
+        $role2 = new Role();
+        $role2->RoleName = "EggRoll";
+        $role2->Save();
 
-		$user = new User();
-		$user->Username = "bob";
-		$user->Forename = "bob";
-		$user->Save();
-		$user->AddToRole( $role );
-		$user->AddToRole( $role2 );
+        $user = new User();
+        $user->Username = "bob";
+        $user->Forename = "bob";
+        $user->Save();
+        $user->AddToRole($role);
+        $user->AddToRole($role2);
 
-		$this->assertCount( 2, UserRole::Find() );
-	}
+        $this->assertCount(2, UserRole::Find());
+    }
 
-	public function testRoleCanBeAddedTwiceWithoutFailing()
-	{
-		$role = new Role();
-		$role->RoleName = "Roll";
-		$role->Save();
+    public function testRoleCanBeAddedTwiceWithoutFailing()
+    {
+        $role = new Role();
+        $role->RoleName = "Roll";
+        $role->Save();
 
-		$user = new User();
-		$user->Username = "bob";
-		$user->Forename = "bob";
+        $user = new User();
+        $user->Username = "bob";
+        $user->Forename = "bob";
 
-		$user->AddToRole( $role );
-		$user->AddToRole( $role );
+        $user->AddToRole($role);
+        $user->AddToRole($role);
 
-		$this->assertCount( 1, UserRole::Find() );
-	}
+        $this->assertCount(1, UserRole::Find());
+    }
 
-	public function testRoleCanBeRemoved()
-	{
-		$role = new Role();
-		$role->RoleName = "Roll";
-		$role->Save();
+    public function testRoleCanBeRemoved()
+    {
+        $role = new Role();
+        $role->RoleName = "Roll";
+        $role->Save();
 
-		$user = new User();
-		$user->Username = "bob";
-		$user->Forename = "bob";
+        $user = new User();
+        $user->Username = "bob";
+        $user->Forename = "bob";
 
-		$user->AddToRole( $role );
-		$this->assertCount( 1, UserRole::Find() );
+        $user->AddToRole($role);
+        $this->assertCount(1, UserRole::Find());
 
-		$user->RemoveFromRole( $role );
-		$this->assertCount( 0, UserRole::Find() );
-	}
+        $user->RemoveFromRole($role);
+        $this->assertCount(0, UserRole::Find());
+    }
 
-	public function testOneOfTwoRolesCanBeRemoved()
-	{
-		$role = new Role();
-		$role->RoleName = "Roll";
-		$role->Save();
+    public function testOneOfTwoRolesCanBeRemoved()
+    {
+        $role = new Role();
+        $role->RoleName = "Roll";
+        $role->Save();
 
-		$role2 = new Role();
-		$role2->RoleName = "EggRoll";
-		$role2->Save();
+        $role2 = new Role();
+        $role2->RoleName = "EggRoll";
+        $role2->Save();
 
-		$user = new User();
-		$user->Username = "bob";
-		$user->Forename = "bob";
-		$user->Save();
-		$user->AddToRole( $role );
-		$user->AddToRole( $role2 );
+        $user = new User();
+        $user->Username = "bob";
+        $user->Forename = "bob";
+        $user->Save();
+        $user->AddToRole($role);
+        $user->AddToRole($role2);
 
-		$this->assertCount( 2, UserRole::Find() );
+        $this->assertCount(2, UserRole::Find());
 
-		$user->RemoveFromRole( $role );
-		$this->assertEquals( "EggRoll", UserRole::Find()[0]->Role->RoleName );
-	}
+        $user->RemoveFromRole($role);
+        $this->assertEquals("EggRoll", UserRole::Find()[0]->Role->RoleName);
+    }
 
-	public function testUserHasPermission()
-	{
-		$eatPermission = new Permission();
-		$eatPermission->PermissionPath = "Goat/Eat";
-		$eatPermission->PermissionName = "Eat";
-		$eatPermission->Save( );
+    public function testUserHasPermission()
+    {
+        $eatPermission = new Permission();
+        $eatPermission->PermissionPath = "Goat/Eat";
+        $eatPermission->PermissionName = "Eat";
+        $eatPermission->Save();
 
-		$user = new User( );
-		$user->Username = "bob";
-		$user->Forename = "bob";
-		$user->Save( );
-		$user->Allow( $eatPermission );
+        $user = new User();
+        $user->Username = "bob";
+        $user->Forename = "bob";
+        $user->Save();
+        $user->Allow($eatPermission);
 
-		$this->assertTrue( $user->Can( $eatPermission->PermissionPath ), "Can eat fail" );
+        $this->assertTrue($user->Can($eatPermission->PermissionPath), "Can eat fail");
 
-		$strokePermission = new Permission();
-		$strokePermission->PermissionPath = "Goat/Stroke";
-		$strokePermission->PermissionName = "Stroke";
-		$strokePermission->Save();
+        $strokePermission = new Permission();
+        $strokePermission->PermissionPath = "Goat/Stroke";
+        $strokePermission->PermissionName = "Stroke";
+        $strokePermission->Save();
 
-		$user->Deny( $strokePermission );
+        $user->Deny($strokePermission);
 
-		$this->assertFalse( $user->Can( $strokePermission->PermissionPath ), "can not stroke fail" );
-	}
+        $this->assertFalse($user->Can($strokePermission->PermissionPath), "can not stroke fail");
+    }
 
-	public function testIfNoPermissionThenDenied()
-	{
-		$user = new User( );
-		$user->Username = "bob";
-		$user->Forename = "bob";
-		$user->Save( );
+    public function testIfNoPermissionThenDenied()
+    {
+        $user = new User();
+        $user->Username = "bob";
+        $user->Forename = "bob";
+        $user->Save();
 
-		$this->assertFalse( $user->Can( "Fire/Eat" ) );
-	}
+        $this->assertFalse($user->Can("Fire/Eat"));
+    }
 
-	public function testCannotAddPermissionToUnsavedUser()
-	{
-		$user = new User( );
-		$user->Username = "bob";
-		$user->Forename = "bob";
-		$this->setExpectedException( __NAMESPACE__."\PermissionException" );
+    public function testCannotAddPermissionToUnsavedUser()
+    {
+        $user = new User();
+        $user->Username = "bob";
+        $user->Forename = "bob";
+        $this->setExpectedException(__NAMESPACE__ . "\PermissionException");
 
-		$eatPermission = new Permission();
-		$eatPermission->PermissionPath = "Goat/Eat";
-		$eatPermission->PermissionName = "Eat";
-		$eatPermission->Save( );
-		$user->Allow( $eatPermission );
-	}
+        $eatPermission = new Permission();
+        $eatPermission->PermissionPath = "Goat/Eat";
+        $eatPermission->PermissionName = "Eat";
+        $eatPermission->Save();
+        $user->Allow($eatPermission);
+    }
 
-	public function testCannotAddUnsavedPermission()
-	{
-		$user = new User( );
-		$user->Username = "bob";
-		$user->Forename = "bob";
-		$user->Save();
+    public function testCannotAddUnsavedPermission()
+    {
+        $user = new User();
+        $user->Username = "bob";
+        $user->Forename = "bob";
+        $user->Save();
 
-		$this->setExpectedException( __NAMESPACE__."\PermissionException" );
+        $this->setExpectedException(__NAMESPACE__ . "\PermissionException");
 
-		$eatPermission = new Permission();
-		$eatPermission->PermissionPath = "Goat/Eat";
-		$eatPermission->PermissionName = "Eat";
-		$user->Allow( $eatPermission );
-	}
+        $eatPermission = new Permission();
+        $eatPermission->PermissionPath = "Goat/Eat";
+        $eatPermission->PermissionName = "Eat";
+        $user->Allow($eatPermission);
+    }
 
-	public function testParentageOfPermissions()
-	{
-		$user = new User();
-		$user->Username = "bob";
-		$user->Forename = "bob";
-		$user->Save();
+    public function testParentageOfPermissions()
+    {
+        $user = new User();
+        $user->Username = "bob";
+        $user->Forename = "bob";
+        $user->Save();
 
-		$permission = new Permission();
-		$permission->PermissionPath = "Staff/Manage";
-		$permission->Save();
+        $permission = new Permission();
+        $permission->PermissionPath = "Staff/Manage";
+        $permission->Save();
 
-		$user->Allow( $permission );
+        $user->Allow($permission);
 
-		$permission = new Permission();
-		$permission->PermissionPath = "Staff/Manage/Fire";
-		$permission->Save();
+        $permission = new Permission();
+        $permission->PermissionPath = "Staff/Manage/Fire";
+        $permission->Save();
 
-		$this->assertTrue( $user->Can( "Staff/Manage/Fire" ) );
-	}
+        $this->assertTrue($user->Can("Staff/Manage/Fire"));
+    }
 }
- 

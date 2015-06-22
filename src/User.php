@@ -68,7 +68,7 @@ class User extends \Rhubarb\Scaffolds\Authentication\User
          */
         $permissionPathParts = preg_split("|[\\/]+|", $permissionPath);
         $permissionPathPartsString = "";
-        $filters = array();
+        $filters = [];
 
         foreach ($permissionPathParts as $pathPart) {
             $permissionPathPartsString .= (strlen($permissionPathPartsString) > 0 ? "/" : "") . $pathPart;
