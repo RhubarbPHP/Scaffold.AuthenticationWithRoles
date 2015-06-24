@@ -1,16 +1,24 @@
 <?php
 
+namespace Rhubarb\Scaffolds\AuthenticationWithRoles\Tests;
 
-namespace Rhubarb\Scaffolds\AuthenticationWithRoles;
+use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Scaffolds\AuthenticationWithRoles\DatabaseSchema;
+use Rhubarb\Scaffolds\AuthenticationWithRoles\Permission;
+use Rhubarb\Scaffolds\AuthenticationWithRoles\PermissionAssignment;
+use Rhubarb\Scaffolds\AuthenticationWithRoles\PermissionException;
+use Rhubarb\Scaffolds\AuthenticationWithRoles\Role;
+use Rhubarb\Scaffolds\AuthenticationWithRoles\User;
+use Rhubarb\Scaffolds\AuthenticationWithRoles\UserRole;
+use Rhubarb\Stem\Schema\SolutionSchema;
 
-use Rhubarb\Crown\UnitTesting\CoreTestCase;
-
-
-class UserTest extends CoreTestCase
+class UserTest extends RhubarbTestCase
 {
     protected function setUp()
     {
         parent::setUp();
+
+        SolutionSchema::registerSchema("Authentication", DatabaseSchema::class);
 
         User::ClearObjectCache();
         Role::ClearObjectCache();
@@ -152,7 +160,7 @@ class UserTest extends CoreTestCase
         $user = new User();
         $user->Username = "bob";
         $user->Forename = "bob";
-        $this->setExpectedException(__NAMESPACE__ . "\PermissionException");
+        $this->setExpectedException(PermissionException::class);
 
         $eatPermission = new Permission();
         $eatPermission->PermissionPath = "Goat/Eat";
@@ -168,7 +176,7 @@ class UserTest extends CoreTestCase
         $user->Forename = "bob";
         $user->Save();
 
-        $this->setExpectedException(__NAMESPACE__ . "\PermissionException");
+        $this->setExpectedException(PermissionException::class);
 
         $eatPermission = new Permission();
         $eatPermission->PermissionPath = "Goat/Eat";
