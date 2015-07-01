@@ -20,7 +20,7 @@ namespace Rhubarb\Scaffolds\AuthenticationWithRoles;
 
 trait AuthenticationTrait
 {
-    abstract function getPermissionPath();
+    abstract public function getPermissionPath();
 
     public function beforeRenderView()
     {
