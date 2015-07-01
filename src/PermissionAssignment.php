@@ -26,6 +26,9 @@ use Rhubarb\Stem\Schema\ModelSchema;
 
 class PermissionAssignment extends Model
 {
+    const ACCESS_ALLOWED = "Allowed";
+    const ACCESS_DENIED = "Denied";
+
     /**
      * Returns the schema for this data object.
      *
@@ -39,7 +42,7 @@ class PermissionAssignment extends Model
             new ForeignKey("UserID"),
             new ForeignKey("RoleID"),
             new ForeignKey("PermissionID"),
-            new MySqlEnum("Access", "Denied", ["Allowed", "Denied"])
+            new MySqlEnum("Access", self::ACCESS_DENIED, [self::ACCESS_ALLOWED, self::ACCESS_DENIED])
         );
 
         return $schema;
