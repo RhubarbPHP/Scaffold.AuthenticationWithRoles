@@ -21,7 +21,6 @@ namespace Rhubarb\Scaffolds\AuthenticationWithRoles;
 use Rhubarb\Stem\Filters\Equals;
 use Rhubarb\Stem\Filters\OrGroup;
 use Rhubarb\Stem\Models\Model;
-use Rhubarb\Stem\Repositories\MySql\Schema\MySqlModelSchema;
 use Rhubarb\Stem\Schema\Columns\AutoIncrement;
 use Rhubarb\Stem\Schema\Columns\String;
 use Rhubarb\Stem\Schema\ModelSchema;
@@ -32,6 +31,9 @@ use Rhubarb\Stem\Schema\ModelSchema;
  */
 class Role extends Model
 {
+
+    use PermissibleModelTrait;
+
     /**
      * Returns the schema for this data object.
      *

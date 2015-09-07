@@ -25,38 +25,14 @@ use Rhubarb\Stem\Schema\ModelSchema;
 
 class User extends \Rhubarb\Scaffolds\Authentication\User
 {
+
+    use PermissibleModelTrait;
+
     protected function extendSchema(ModelSchema $schema)
     {
         $schema->addColumn(new ForeignKey("RoleID"));
 
         parent::extendSchema($schema);
-    }
-
-    public function allow(Permission $permission)
-    {
-        $this->setPermissionSetting($permission, true);
-    }
-
-    public function deny(Permission $permission)
-    {
-        $this->setPermissionSetting($permission, false);
-    }
-
-    private function setPermissionSetting(Permission $permission, $allowed = true)
-    {
-        if ($permission->isNewRecord()) {
-            throw new PermissionException("The permission has not been saved.");
-        }
-
-        if ($this->isNewRecord()) {
-            throw new PermissionException("The user has not been saved.");
-        }
-
-        $assignment = new PermissionAssignment();
-        $assignment->PermissionID = $permission->PermissionID;
-        $assignment->UserID = $this->UniqueIdentifier;
-        $assignment->Access = ($allowed) ? "Allowed" : "Denied";
-        $assignment->save();
     }
 
     public function can($permissionPath)
