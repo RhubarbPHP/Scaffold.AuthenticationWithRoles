@@ -81,4 +81,13 @@ class Role extends Model
 
         return false;
     }
+
+    protected function afterDelete()
+    {
+        parent::afterDelete();
+
+        // Remove UserRole and PermissionAssignment records
+        $this->UsersRaw->deleteAll();
+        $this->Permissions->deleteAll();
+    }
 }
