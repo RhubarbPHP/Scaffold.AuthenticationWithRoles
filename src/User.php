@@ -21,6 +21,7 @@ namespace Rhubarb\Scaffolds\AuthenticationWithRoles;
 use Rhubarb\Stem\Filters\Equals;
 use Rhubarb\Stem\Filters\OrGroup;
 use Rhubarb\Stem\Schema\Columns\ForeignKey;
+use Rhubarb\Stem\Schema\Columns\UUID;
 use Rhubarb\Stem\Schema\ModelSchema;
 
 class User extends \Rhubarb\Scaffolds\Authentication\User
@@ -31,6 +32,7 @@ class User extends \Rhubarb\Scaffolds\Authentication\User
     protected function extendSchema(ModelSchema $schema)
     {
         $schema->addColumn(new ForeignKey("RoleID"));
+        $schema->addColumn(new UUID());
 
         parent::extendSchema($schema);
     }
