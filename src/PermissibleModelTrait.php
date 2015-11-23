@@ -16,27 +16,30 @@ trait PermissibleModelTrait
     /**
      * @param Permission $permission
      *
+     * @return int The associated Permission Assignment record ID
      * @throws PermissionException
      */
     public function allow(Permission $permission)
     {
-        $this->setPermissionSetting($permission, true);
+        return $this->setPermissionSetting($permission, true);
     }
 
     /**
      * @param Permission $permission
      *
+     * @return int The associated Permission Assignment record ID
      * @throws PermissionException
      */
     public function deny(Permission $permission)
     {
-        $this->setPermissionSetting($permission, false);
+        return $this->setPermissionSetting($permission, false);
     }
 
     /**
      * @param Permission $permission
-     * @param bool|true  $allowed
+     * @param bool|true $allowed
      *
+     * @return int The associated Permission Assignment record ID
      * @throws PermissionException
      * @throws \Exception
      * @throws \Rhubarb\Stem\Exceptions\ModelConsistencyValidationException
@@ -68,5 +71,7 @@ trait PermissibleModelTrait
         }
         $assignment->Access = $allowed ? 'Allowed' : 'Denied';
         $assignment->save();
+
+        return $assignment->PermissionAssignmentID;
     }
 }
