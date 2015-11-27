@@ -21,7 +21,7 @@ namespace Rhubarb\Scaffolds\AuthenticationWithRoles;
 use Rhubarb\Stem\Models\Model;
 use Rhubarb\Stem\Schema\Columns\AutoIncrement;
 use Rhubarb\Stem\Schema\Columns\ForeignKey;
-use Rhubarb\Stem\Schema\Columns\String;
+use Rhubarb\Stem\Schema\Columns\StringColumn;
 use Rhubarb\Stem\Schema\ModelSchema;
 
 class Permission extends Model
@@ -31,8 +31,8 @@ class Permission extends Model
         $schema = new ModelSchema("tblAuthenticationPermission");
         $schema->addColumn(
             new AutoIncrement("PermissionID"),
-            new String("PermissionName", 250),
-            new String("PermissionPath", 250),
+            new StringColumn("PermissionName", 250),
+            new StringColumn("PermissionPath", 250),
             new ForeignKey("ParentPermissionID")
         );
 

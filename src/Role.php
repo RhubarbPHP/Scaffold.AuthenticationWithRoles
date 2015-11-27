@@ -22,7 +22,7 @@ use Rhubarb\Stem\Filters\Equals;
 use Rhubarb\Stem\Filters\OrGroup;
 use Rhubarb\Stem\Models\Model;
 use Rhubarb\Stem\Schema\Columns\AutoIncrement;
-use Rhubarb\Stem\Schema\Columns\String;
+use Rhubarb\Stem\Schema\Columns\StringColumn;
 use Rhubarb\Stem\Schema\ModelSchema;
 
 /**
@@ -44,7 +44,7 @@ class Role extends Model
         $schema = new ModelSchema("tblAuthenticationRole");
         $schema->addColumn(
             new AutoIncrement("RoleID"),
-            new String("RoleName", 40)
+            new StringColumn("RoleName", 40)
         );
 
         $schema->labelColumnName = "RoleName";
