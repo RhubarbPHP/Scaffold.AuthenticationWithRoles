@@ -19,8 +19,8 @@
 namespace Rhubarb\Scaffolds\AuthenticationWithRoles;
 
 use Rhubarb\Stem\Models\Model;
-use Rhubarb\Stem\Schema\Columns\AutoIncrement;
-use Rhubarb\Stem\Schema\Columns\ForeignKey;
+use Rhubarb\Stem\Schema\Columns\AutoIncrementColumn;
+use Rhubarb\Stem\Schema\Columns\ForeignKeyColumn;
 use Rhubarb\Stem\Schema\ModelSchema;
 
 class UserRole extends Model
@@ -29,9 +29,9 @@ class UserRole extends Model
     {
         $schema = new ModelSchema("tblAuthenticationUserRole");
         $schema->addColumn(
-            new AutoIncrement("UserRoleID"),
-            new ForeignKey("UserID"),
-            new ForeignKey("RoleID")
+            new AutoIncrementColumn("UserRoleID"),
+            new ForeignKeyColumn("UserID"),
+            new ForeignKeyColumn("RoleID")
         );
 
         return $schema;
