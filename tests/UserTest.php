@@ -20,104 +20,104 @@ class UserTest extends RhubarbTestCase
 
         SolutionSchema::registerSchema("Authentication", DatabaseSchema::class);
 
-        User::ClearObjectCache();
-        Role::ClearObjectCache();
-        UserRole::ClearObjectCache();
-        Permission::ClearObjectCache();
-        PermissionAssignment::ClearObjectCache();
+        User::clearObjectCache();
+        Role::clearObjectCache();
+        UserRole::clearObjectCache();
+        Permission::clearObjectCache();
+        PermissionAssignment::clearObjectCache();
     }
 
     public function testRoleCanBeAdded()
     {
         $role = new Role();
         $role->RoleName = "Roll";
-        $role->Save();
+        $role->save();
 
         $user = new User();
         $user->Username = "bob";
         $user->Forename = "bob";
-        $user->Save();
-        $user->AddToRole($role);
+        $user->save();
+        $user->addToRole($role);
 
-        $this->assertCount(1, UserRole::Find());
-        $this->assertEquals($user->UniqueIdentifier, UserRole::Find()[0]->UserID);
-        $this->assertEquals($role->UniqueIdentifier, UserRole::Find()[0]->RoleID);
+        $this->assertCount(1, UserRole::find());
+        $this->assertEquals($user->UniqueIdentifier, UserRole::find()[0]->UserID);
+        $this->assertEquals($role->UniqueIdentifier, UserRole::find()[0]->RoleID);
     }
 
     public function testSeparateRolesCanBeAdded()
     {
         $role = new Role();
         $role->RoleName = "Roll";
-        $role->Save();
+        $role->save();
 
         $role2 = new Role();
         $role2->RoleName = "EggRoll";
-        $role2->Save();
+        $role2->save();
 
         $user = new User();
         $user->Username = "bob";
         $user->Forename = "bob";
-        $user->Save();
-        $user->AddToRole($role);
-        $user->AddToRole($role2);
+        $user->save();
+        $user->addToRole($role);
+        $user->addToRole($role2);
 
-        $this->assertCount(2, UserRole::Find());
+        $this->assertCount(2, UserRole::find());
     }
 
     public function testRoleCanBeAddedTwiceWithoutFailing()
     {
         $role = new Role();
         $role->RoleName = "Roll";
-        $role->Save();
+        $role->save();
 
         $user = new User();
         $user->Username = "bob";
         $user->Forename = "bob";
 
-        $user->AddToRole($role);
-        $user->AddToRole($role);
+        $user->addToRole($role);
+        $user->addToRole($role);
 
-        $this->assertCount(1, UserRole::Find());
+        $this->assertCount(1, UserRole::find());
     }
 
     public function testRoleCanBeRemoved()
     {
         $role = new Role();
         $role->RoleName = "Roll";
-        $role->Save();
+        $role->save();
 
         $user = new User();
         $user->Username = "bob";
         $user->Forename = "bob";
 
-        $user->AddToRole($role);
-        $this->assertCount(1, UserRole::Find());
+        $user->addToRole($role);
+        $this->assertCount(1, UserRole::find());
 
-        $user->RemoveFromRole($role);
-        $this->assertCount(0, UserRole::Find());
+        $user->removeFromRole($role);
+        $this->assertCount(0, UserRole::find());
     }
 
     public function testOneOfTwoRolesCanBeRemoved()
     {
         $role = new Role();
         $role->RoleName = "Roll";
-        $role->Save();
+        $role->save();
 
         $role2 = new Role();
         $role2->RoleName = "EggRoll";
-        $role2->Save();
+        $role2->save();
 
         $user = new User();
         $user->Username = "bob";
         $user->Forename = "bob";
-        $user->Save();
-        $user->AddToRole($role);
-        $user->AddToRole($role2);
+        $user->save();
+        $user->addToRole($role);
+        $user->addToRole($role2);
 
-        $this->assertCount(2, UserRole::Find());
+        $this->assertCount(2, UserRole::find());
 
-        $user->RemoveFromRole($role);
-        $this->assertEquals("EggRoll", UserRole::Find()[0]->Role->RoleName);
+        $user->removeFromRole($role);
+        $this->assertEquals("EggRoll", UserRole::find()[0]->Role->RoleName);
     }
 
     public function testUserHasPermission()
@@ -125,24 +125,24 @@ class UserTest extends RhubarbTestCase
         $eatPermission = new Permission();
         $eatPermission->PermissionPath = "Goat/Eat";
         $eatPermission->PermissionName = "Eat";
-        $eatPermission->Save();
+        $eatPermission->save();
 
         $user = new User();
         $user->Username = "bob";
         $user->Forename = "bob";
-        $user->Save();
-        $user->Allow($eatPermission);
+        $user->save();
+        $user->allow($eatPermission);
 
-        $this->assertTrue($user->Can($eatPermission->PermissionPath), "Can eat fail");
+        $this->assertTrue($user->can($eatPermission->PermissionPath), "Can eat fail");
 
         $strokePermission = new Permission();
         $strokePermission->PermissionPath = "Goat/Stroke";
         $strokePermission->PermissionName = "Stroke";
-        $strokePermission->Save();
+        $strokePermission->save();
 
-        $user->Deny($strokePermission);
+        $user->deny($strokePermission);
 
-        $this->assertFalse($user->Can($strokePermission->PermissionPath), "can not stroke fail");
+        $this->assertFalse($user->can($strokePermission->PermissionPath), "can not stroke fail");
     }
 
     public function testIfNoPermissionThenDenied()
@@ -150,9 +150,9 @@ class UserTest extends RhubarbTestCase
         $user = new User();
         $user->Username = "bob";
         $user->Forename = "bob";
-        $user->Save();
+        $user->save();
 
-        $this->assertFalse($user->Can("Fire/Eat"));
+        $this->assertFalse($user->can("Fire/Eat"));
     }
 
     public function testCannotAddPermissionToUnsavedUser()
@@ -165,8 +165,8 @@ class UserTest extends RhubarbTestCase
         $eatPermission = new Permission();
         $eatPermission->PermissionPath = "Goat/Eat";
         $eatPermission->PermissionName = "Eat";
-        $eatPermission->Save();
-        $user->Allow($eatPermission);
+        $eatPermission->save();
+        $user->allow($eatPermission);
     }
 
     public function testCannotAddUnsavedPermission()
@@ -174,14 +174,14 @@ class UserTest extends RhubarbTestCase
         $user = new User();
         $user->Username = "bob";
         $user->Forename = "bob";
-        $user->Save();
+        $user->save();
 
         $this->setExpectedException(PermissionException::class);
 
         $eatPermission = new Permission();
         $eatPermission->PermissionPath = "Goat/Eat";
         $eatPermission->PermissionName = "Eat";
-        $user->Allow($eatPermission);
+        $user->allow($eatPermission);
     }
 
     public function testParentageOfPermissions()
@@ -189,18 +189,18 @@ class UserTest extends RhubarbTestCase
         $user = new User();
         $user->Username = "bob";
         $user->Forename = "bob";
-        $user->Save();
+        $user->save();
 
         $permission = new Permission();
         $permission->PermissionPath = "Staff/Manage";
-        $permission->Save();
+        $permission->save();
 
-        $user->Allow($permission);
+        $user->allow($permission);
 
         $permission = new Permission();
         $permission->PermissionPath = "Staff/Manage/Fire";
-        $permission->Save();
+        $permission->save();
 
-        $this->assertTrue($user->Can("Staff/Manage/Fire"));
+        $this->assertTrue($user->can("Staff/Manage/Fire"));
     }
 }
