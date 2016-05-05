@@ -18,12 +18,16 @@
 
 namespace Rhubarb\Scaffolds\AuthenticationWithRoles;
 
+use Rhubarb\Scaffolds\Saas\Tenant\Repositories\SaasMySqlRepository\SaasMySqlRepository;
+
 trait AuthenticationTrait
 {
     abstract public function getPermissionPath();
 
-    public function beforeRenderView()
+    public function beforeRender()
     {
+        SaasMySqlRepository::assertConnectedToTenant();
+
         $user = User::getLoggedInUser();
 
         if (!$user->can($this->getPermissionPath())) {
