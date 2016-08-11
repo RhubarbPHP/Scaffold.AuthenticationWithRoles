@@ -2,7 +2,7 @@
 
 namespace Rhubarb\Scaffolds\AuthenticationWithRoles\Tests;
 
-use Rhubarb\Crown\Tests\RhubarbTestCase;
+use Rhubarb\Crown\Tests\Fixtures\TestCases\RhubarbTestCase;
 use Rhubarb\Scaffolds\AuthenticationWithRoles\DatabaseSchema;
 use Rhubarb\Scaffolds\AuthenticationWithRoles\Permission;
 use Rhubarb\Scaffolds\AuthenticationWithRoles\PermissionAssignment;
