@@ -19,6 +19,10 @@
 namespace Rhubarb\Scaffolds\AuthenticationWithRoles;
 
 use Rhubarb\Scaffolds\Authentication\AuthenticationModule;
+use Rhubarb\Stem\Exceptions\RecordNotFoundException;
+use Rhubarb\Stem\Filters\Equals;
+use Rhubarb\Stem\Filters\Not;
+use Rhubarb\Stem\Filters\OneOf;
 use Rhubarb\Stem\Schema\SolutionSchema;
 
 /**
@@ -35,6 +39,67 @@ class AuthenticationWithRolesModule extends AuthenticationModule
     {
         parent::initialise();
 
-        SolutionSchema::registerSchema("Authentication", __NAMESPACE__ . '\DatabaseSchema');
+        SolutionSchema::registerSchema('Authentication', DatabaseSchema::class);
+    }
+
+    public static function updateRolePermissions()
+    {
+        /** @var Role[] $roleRecords */
+        $roleRecords = [];
+        /** @var Permission $permissionRecords */
+        $permissionRecords = [];
+
+        $permissionAssignmentIDs = [];
+
+        $permissionMaintainer = function (
+            $permissionRules,
+            $allow
+        ) use (
+            &$permissionRecords,
+            &$roleRecords,
+            &$permissionAssignmentIDs
+        ) {
+            foreach ($permissionRules as $roleName => $permissions) {
+                if (!isset($roleRecords[$roleName])) {
+                    try {
+                        $role = Role::findFirst(new Equals('RoleName', $roleName));
+                    } catch (RecordNotFoundException $ex) {
+                        $role = new Role();
+                        $role->RoleName = $roleName;
+                        $role->save();
+                    }
+                    $roleRecords[$roleName] = $role;
+                }
+
+                foreach ($permissions as $permissionPath) {
+                    if (!isset($permissionRecords[$permissionPath])) {
+                        try {
+                            $permission = Permission::findFirst(new Equals('PermissionPath', $permissionPath));
+                        } catch (RecordNotFoundException $ex) {
+                            $permission = new Permission();
+                            $permission->PermissionPath = $permissionPath;
+                            $permission->PermissionName = $permissionPath;
+                            $permission->save();
+                        }
+                        $permissionRecords[$permissionPath] = $permission;
+                    }
+                    $permissionAssignmentIDs[] = $allow
+                        ? $roleRecords[$roleName]->allow($permissionRecords[$permissionPath])
+                        : $roleRecords[$roleName]->deny($permissionRecords[$permissionPath]);
+                }
+            }
+        };
+
+        /** @var AuthenticationWithRolesSettings $settings */
+        $settings = AuthenticationWithRolesSettings::singleton();
+
+        $permissionMaintainer($settings->allowRolePermissions, true);
+        $permissionMaintainer($settings->denyRolePermissions, true);
+
+        if (count($permissionAssignmentIDs) > 0) {
+            PermissionAssignment::find(
+                new Not(new OneOf('PermissionAssignmentID', $permissionAssignmentIDs))
+            )->deleteAll();
+        }
     }
 }
