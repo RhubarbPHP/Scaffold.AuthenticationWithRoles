@@ -18,7 +18,9 @@
 
 namespace Rhubarb\Scaffolds\AuthenticationWithRoles;
 
+use Rhubarb\Custard\Command\CustardCommand;
 use Rhubarb\Scaffolds\Authentication\AuthenticationModule;
+use Rhubarb\Scaffolds\AuthenticationWithRoles\Commands\UpdateRolePermissionsCommand;
 use Rhubarb\Stem\Exceptions\RecordNotFoundException;
 use Rhubarb\Stem\Filters\Equals;
 use Rhubarb\Stem\Filters\Not;
@@ -90,8 +92,8 @@ class AuthenticationWithRolesModule extends AuthenticationModule
             }
         };
 
-        /** @var AuthenticationWithRolesSettings $settings */
-        $settings = AuthenticationWithRolesSettings::singleton();
+        /** @var RolePermissionDefinitions $settings */
+        $settings = RolePermissionDefinitions::singleton();
 
         $permissionMaintainer($settings->allowRolePermissions, true);
         $permissionMaintainer($settings->denyRolePermissions, true);
@@ -101,5 +103,16 @@ class AuthenticationWithRolesModule extends AuthenticationModule
                 new Not(new OneOf('PermissionAssignmentID', $permissionAssignmentIDs))
             )->deleteAll();
         }
+    }
+
+    /**
+     * @return CustardCommand[]
+     */
+    public function getCustardCommands()
+    {
+        $commands = parent::getCustardCommands();
+        $commands[] = new UpdateRolePermissionsCommand();
+
+        return $commands;
     }
 }

@@ -4,7 +4,7 @@ namespace Rhubarb\Scaffolds\AuthenticationWithRoles;
 
 use Rhubarb\Crown\Settings;
 
-class AuthenticationWithRolesSettings extends Settings
+class RolePermissionDefinitions extends Settings
 {
     public $allowRolePermissions = [];
     public $denyRolePermissions = [];
