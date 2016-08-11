@@ -19,86 +19,55 @@
 namespace Rhubarb\Scaffolds\AuthenticationWithRoles;
 
 use Rhubarb\Stem\Filters\Equals;
-use Rhubarb\Stem\Filters\OrGroup;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\ForeignKey;
+use Rhubarb\Stem\Filters\Filter;
+use Rhubarb\Stem\Schema\Columns\ForeignKeyColumn;
 use Rhubarb\Stem\Schema\ModelSchema;
 
 class User extends \Rhubarb\Scaffolds\Authentication\User
 {
+    use PermissibleModelTrait {
+        can as traitCan;
+    }
+
     protected function extendSchema(ModelSchema $schema)
     {
-        $schema->addColumn(new ForeignKey("RoleID"));
+        $schema->addColumn(new ForeignKeyColumn("RoleID"));
 
         parent::extendSchema($schema);
     }
 
-    public function allow(Permission $permission)
+    /**
+     * @param string $permissionPath
+     * @param Filter|null $filter
+     * @return bool
+     */
+    public function can($permissionPath, $filter = null)
     {
-        $this->setPermissionSetting($permission, true);
-    }
-
-    public function deny(Permission $permission)
-    {
-        $this->setPermissionSetting($permission, false);
-    }
-
-    private function setPermissionSetting(Permission $permission, $allowed = true)
-    {
-        if ($permission->isNewRecord()) {
-            throw new PermissionException("The permission has not been saved.");
+        if ($filter == null) {
+            $filter = $this->createPermissionPathFilter($permissionPath);
         }
 
-        if ($this->isNewRecord()) {
-            throw new PermissionException("The user has not been saved.");
+        // test if user can
+        if ($this->traitCan($permissionPath, $filter)) {
+            return true;
         }
 
-        $assignment = new PermissionAssignment();
-        $assignment->PermissionID = $permission->PermissionID;
-        $assignment->UserID = $this->UniqueIdentifier;
-        $assignment->Access = ($allowed) ? "Allowed" : "Denied";
-        $assignment->save();
-    }
-
-    public function can($permissionPath)
-    {
-        /**
-         * use the most specific permission available
-         * In the case where Manage/Staff/Fire is NOT specified on the system BUT
-         * Manage/Staff *is* We want to apply the permission for Manage/Staff
-         */
-        $permissionPathParts = preg_split("|[\\/]+|", $permissionPath);
-        $permissionPathPartsString = "";
-        $filters = array();
-
-        foreach ($permissionPathParts as $pathPart) {
-            $permissionPathPartsString .= (strlen($permissionPathPartsString) > 0 ? "/" : "") . $pathPart;
-            $filters[] = new Equals("Permission.PermissionPath", $permissionPathPartsString);
-        }
-
-        $finalFilter = new OrGroup($filters);
-
-        $permissionCollection = $this->Permissions;
-        $permissionCollection->filter($finalFilter);
-        $permissionCollection->addSort("Permission.PermissionPath", false);
-
-        if (count($permissionCollection) > 0) {
-            $assignedPermission = $permissionCollection[0];
-            return $assignedPermission->Access == "Allowed";
-        }
-
+        // test primary role can
         if ($this->RoleID) {
-            if ($this->Role->can($permissionPath, $finalFilter)) {
+            if ($this->Role->can($permissionPath, $filter)) {
                 return true;
             }
         }
 
+        // test other roles can
         /** @var Role $role */
         foreach ($this->Roles as $role) {
-            if ($role->can($permissionPath, $finalFilter)) {
+            if ($role->can($permissionPath, $filter)) {
                 return true;
             }
         }
 
+        // cannot
         return false;
     }
 

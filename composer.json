@@ -11,8 +11,9 @@
     }
   },
   "require": {
-    "rhubarbphp/rhubarb": "*",
-    "rhubarbphp/scaffold-authentication": "*"
+    "rhubarbphp/rhubarb": "^1.1",
+    "rhubarbphp/module-stem": "^1.2",
+    "rhubarbphp/scaffold-authentication": "^0.99.0"
   },
   "require-dev": {
     "phpunit/phpunit": "3.*"

@@ -19,13 +19,16 @@
 namespace Rhubarb\Scaffolds\AuthenticationWithRoles;
 
 use Rhubarb\Stem\Models\Model;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\AutoIncrement;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\Enum;
-use Rhubarb\Stem\Repositories\MySql\Schema\Columns\ForeignKey;
-use Rhubarb\Stem\Repositories\MySql\Schema\MySqlSchema;
+use Rhubarb\Stem\Repositories\MySql\Schema\Columns\MySqlEnumColumn;
+use Rhubarb\Stem\Schema\Columns\AutoIncrementColumn;
+use Rhubarb\Stem\Schema\Columns\ForeignKeyColumn;
+use Rhubarb\Stem\Schema\ModelSchema;
 
 class PermissionAssignment extends Model
 {
+    const ACCESS_ALLOWED = "Allowed";
+    const ACCESS_DENIED = "Denied";
+
     /**
      * Returns the schema for this data object.
      *
@@ -33,13 +36,13 @@ class PermissionAssignment extends Model
      */
     protected function createSchema()
     {
-        $schema = new MySqlSchema("tblAuthenticationPermissionAssignment");
+        $schema = new ModelSchema("tblAuthenticationPermissionAssignment");
         $schema->addColumn(
-            new AutoIncrement("PermissionAssignmentID"),
-            new ForeignKey("UserID"),
-            new ForeignKey("RoleID"),
-            new ForeignKey("PermissionID"),
-            new Enum("Access", "Denied", ["Allowed", "Denied"])
+            new AutoIncrementColumn("PermissionAssignmentID"),
+            new ForeignKeyColumn("UserID"),
+            new ForeignKeyColumn("RoleID"),
+            new ForeignKeyColumn("PermissionID"),
+            new MySqlEnumColumn("Access", self::ACCESS_DENIED, [self::ACCESS_ALLOWED, self::ACCESS_DENIED])
         );
 
         return $schema;
