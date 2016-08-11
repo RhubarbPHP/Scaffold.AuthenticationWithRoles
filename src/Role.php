@@ -18,8 +18,6 @@
 
 namespace Rhubarb\Scaffolds\AuthenticationWithRoles;
 
-use Rhubarb\Stem\Filters\Equals;
-use Rhubarb\Stem\Filters\OrGroup;
 use Rhubarb\Stem\Models\Model;
 use Rhubarb\Stem\Schema\Columns\AutoIncrementColumn;
 use Rhubarb\Stem\Schema\Columns\StringColumn;
@@ -50,38 +48,6 @@ class Role extends Model
         $schema->labelColumnName = "RoleName";
 
         return $schema;
-    }
-
-    public function can($permissionPath, $filter = null)
-    {
-        if ($filter == null) {
-            /**
-             * use the most specific permission available
-             * In the case where Manage/Staff/Fire is NOT specified on the system BUT
-             * Manage/Staff *is* We want to apply the permission for Manage/Staff
-             */
-            $permissionPathParts = preg_split('|[\/]+|', $permissionPath);
-            $permissionPathPartsString = "";
-            $filters = [];
-
-            foreach ($permissionPathParts as $pathPart) {
-                $permissionPathPartsString .= (strlen($permissionPathPartsString) > 0 ? "/" : "") . $pathPart;
-                $filters[] = new Equals("Permission.PermissionPath", $permissionPathPartsString);
-            }
-
-            $filter = new OrGroup($filters);
-        }
-
-        $rolePermissionCollection = $this->Permissions;
-        $rolePermissionCollection->filter($filter);
-        $rolePermissionCollection->addSort("Permission.PermissionPath", false);
-
-        if (count($rolePermissionCollection) > 0) {
-            $assignedPermission = $rolePermissionCollection[0];
-            return $assignedPermission->Access == "Allowed";
-        }
-
-        return false;
     }
 
     protected function afterDelete()
