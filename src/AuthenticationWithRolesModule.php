@@ -96,7 +96,7 @@ class AuthenticationWithRolesModule extends AuthenticationModule
         $settings = RolePermissionDefinitions::singleton();
 
         $permissionMaintainer($settings->allowRolePermissions, true);
-        $permissionMaintainer($settings->denyRolePermissions, true);
+        $permissionMaintainer($settings->denyRolePermissions, false);
 
         if (count($permissionAssignmentIDs) > 0) {
             PermissionAssignment::find(

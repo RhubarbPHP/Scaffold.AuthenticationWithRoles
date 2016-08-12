@@ -2,14 +2,21 @@
 
 namespace Rhubarb\Scaffolds\AuthenticationWithRoles\Tests\unit;
 
+use Rhubarb\Crown\Application;
+use Rhubarb\Crown\Layout\LayoutModule;
 use Rhubarb\Crown\Tests\Fixtures\TestCases\RhubarbTestCase;
+use Rhubarb\Scaffolds\Authentication\LoginProviders\LoginProvider;
+use Rhubarb\Scaffolds\AuthenticationWithRoles\AuthenticationWithRolesModule;
 use Rhubarb\Scaffolds\AuthenticationWithRoles\DatabaseSchema;
 use Rhubarb\Scaffolds\AuthenticationWithRoles\Permission;
 use Rhubarb\Scaffolds\AuthenticationWithRoles\PermissionAssignment;
 use Rhubarb\Scaffolds\AuthenticationWithRoles\PermissionException;
 use Rhubarb\Scaffolds\AuthenticationWithRoles\Role;
+use Rhubarb\Scaffolds\AuthenticationWithRoles\RolePermissionDefinitions;
 use Rhubarb\Scaffolds\AuthenticationWithRoles\User;
 use Rhubarb\Scaffolds\AuthenticationWithRoles\UserRole;
+use Rhubarb\Stem\Repositories\Offline\Offline;
+use Rhubarb\Stem\Repositories\Repository;
 use Rhubarb\Stem\Schema\SolutionSchema;
 
 class UserTest extends RhubarbTestCase
@@ -18,13 +25,15 @@ class UserTest extends RhubarbTestCase
     {
         parent::setUp();
 
+        Repository::setDefaultRepositoryClassName(Offline::class);
         SolutionSchema::registerSchema("Authentication", DatabaseSchema::class);
 
-        User::clearObjectCache();
-        Role::clearObjectCache();
-        UserRole::clearObjectCache();
-        Permission::clearObjectCache();
-        PermissionAssignment::clearObjectCache();
+        $app = new Application();
+        $app->registerModule(new AuthenticationWithRolesModule(LoginProvider::class));
+        $app->unitTesting = true;
+        $app->initialiseModules();
+
+        LayoutModule::disableLayout();
     }
 
     public function testRoleCanBeAdded()
@@ -202,5 +211,38 @@ class UserTest extends RhubarbTestCase
         $permission->save();
 
         $this->assertTrue($user->can("Staff/Manage/Fire"));
+    }
+
+    public function testRolePermissionManager()
+    {
+        self::assertCount(0, Role::all());
+        self::assertCount(0, Permission::all());
+        AuthenticationWithRolesModule::updateRolePermissions();
+        self::assertCount(0, Role::all());
+        self::assertCount(0, Permission::all());
+
+        /** @var RolePermissionDefinitions $definitions */
+        $definitions = RolePermissionDefinitions::singleton();
+        $definitions->allowPermissionsForRole('r1', ['p1']);
+        $definitions->allowPermissionsForRole('r2', []);
+        AuthenticationWithRolesModule::updateRolePermissions();
+        $p1 = Permission::findFirst();
+        $r1 = Role::findFirst();
+        $r2 = Role::findLast();
+        self::assertEquals('p1', $p1->PermissionPath);
+        self::assertEquals('r1', $r1->RoleName);
+        self::assertEquals('r2', $r2->RoleName);
+        self::assertTrue($r1->can('p1'));
+        self::assertFalse($r2->can('p1'));
+
+        $definitions->allowPermissionsForRole('r2', ['p1/p2']);
+        AuthenticationWithRolesModule::updateRolePermissions();
+        self::assertTrue($r1->can('p1/p2'));
+        self::assertTrue($r2->can('p1/p2'));
+
+        $definitions->denyPermissionsForRole('r1', ['p1/p2/p3']);
+        AuthenticationWithRolesModule::updateRolePermissions();
+        self::assertFalse($r1->can('p1/p2/p3'));
+        self::assertTrue($r2->can('p1/p2/p3'));
     }
 }
