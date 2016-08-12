@@ -46,8 +46,10 @@ class RolePermissionDefinitions extends Settings
     private function setRolePermissionProperty($role, $permissions, $allow)
     {
         $property = $allow ? 'allowRolePermissions' : 'denyRolePermissions';
-        ($this->$property)[$role] = isset(($this->$property)[$role])
-            ? array_merge(($this->$property)[$role], $permissions)
+        $array = $this->$property;
+        $array[$role] = isset($array[$role])
+            ? array_merge($array[$role], $permissions)
             : $permissions;
+        $this->$property = $array;
     }
 }
