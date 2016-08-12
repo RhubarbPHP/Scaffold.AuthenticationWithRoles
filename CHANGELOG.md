@@ -2,6 +2,7 @@
 
 ### 1.2.0
 
+* Added:    Codeception
 * Added:    .gitignore file
 * Added:    Custard command to update roles and permissions
 * Added:    Module now has method for updating roles and managing their assigned permissions

@@ -1,6 +1,6 @@
 <?php
 
-namespace Rhubarb\Scaffolds\AuthenticationWithRoles\Tests;
+namespace Rhubarb\Scaffolds\AuthenticationWithRoles\Tests\unit;
 
 use Rhubarb\Crown\Tests\Fixtures\TestCases\RhubarbTestCase;
 use Rhubarb\Scaffolds\AuthenticationWithRoles\DatabaseSchema;
