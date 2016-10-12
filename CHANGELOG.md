@@ -1,5 +1,9 @@
 # Change log
 
+### 1.2.1
+
+* Removed:  Unused module constructor
+
 ### 1.2.0
 
 * Added:    Codeception

@@ -32,11 +32,6 @@ use Rhubarb\Stem\Schema\SolutionSchema;
  */
 class AuthenticationWithRolesModule extends AuthenticationModule
 {
-    public function __construct($loginProviderClassName = null, $urlToProtect = "/", $loginUrl = "/login/")
-    {
-        parent::__construct($loginProviderClassName, $urlToProtect, $loginUrl);
-    }
-
     public function initialise()
     {
         parent::initialise();
