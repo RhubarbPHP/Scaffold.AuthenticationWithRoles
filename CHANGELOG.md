@@ -1,5 +1,9 @@
 # Change log
 
+### 1.2.x
+
+* Changed:  Allowed 0.99+ of scaffold-authentication module
+
 ### 1.2.1
 
 * Removed:  Unused module constructor

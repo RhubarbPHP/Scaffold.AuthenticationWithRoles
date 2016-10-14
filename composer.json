@@ -13,7 +13,7 @@
   "require": {
     "rhubarbphp/rhubarb": "^1.1",
     "rhubarbphp/module-stem": "^1.2",
-    "rhubarbphp/scaffold-authentication": "^1.0",
+    "rhubarbphp/scaffold-authentication": ">0.99",
     "rhubarbphp/custard": "^1.0"
   },
   "require-dev": {
