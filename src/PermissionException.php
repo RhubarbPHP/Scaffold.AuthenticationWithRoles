@@ -22,7 +22,7 @@ use Exception;
 
 class PermissionException extends \Exception
 {
-    public function __construct($message = "")
+    public function __construct($message = "Your user account has not been granted access to this function.")
     {
         parent::__construct($message);
     }
