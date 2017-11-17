@@ -1,8 +1,8 @@
 # Change log
 
-### 1.2.x
+### 1.2.2
 
-* Changed:  Allowed 0.99+ of scaffold-authentication module
+* Changed:  Allowed 1.2.4+ of scaffold-authentication module
 
 ### 1.2.1
 

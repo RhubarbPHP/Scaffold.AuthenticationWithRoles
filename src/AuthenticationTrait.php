@@ -18,13 +18,23 @@
 
 namespace Rhubarb\Scaffolds\AuthenticationWithRoles;
 
+use Rhubarb\Crown\LoginProviders\LoginProvider;
+
 trait AuthenticationTrait
 {
     abstract public function getPermissionPath();
 
     public function beforeRender()
     {
-        $user = User::getLoggedInUser();
+        /**
+         * @var $provider \Rhubarb\Scaffolds\Authentication\LoginProviders\LoginProvider
+         */
+        $provider = LoginProvider::getProvider();
+
+        /**
+         * @var $user User
+         */
+        $user = $provider->getModel();
 
         if (!$user->can($this->getPermissionPath())) {
             throw new PermissionException("You don't have permission to access this.");
