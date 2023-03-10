@@ -24,6 +24,18 @@ use Rhubarb\Stem\Schema\Columns\AutoIncrementColumn;
 use Rhubarb\Stem\Schema\Columns\ForeignKeyColumn;
 use Rhubarb\Stem\Schema\ModelSchema;
 
+/**
+ *
+ *
+ * @property int $PermissionAssignmentID Repository field
+ * @property int $UserID Repository field
+ * @property int $RoleID Repository field
+ * @property int $PermissionID Repository field
+ * @property string $Access Repository field
+ * @property-read \CashForKids\Model\Role $Role Relationship
+ * @property-read \CashForKids\Model\Users\User $User Relationship
+ * @property-read Permission $Permission Relationship
+ */
 class PermissionAssignment extends Model
 {
     const ACCESS_ALLOWED = "Allowed";

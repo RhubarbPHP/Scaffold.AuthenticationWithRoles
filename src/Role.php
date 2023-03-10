@@ -73,10 +73,12 @@ class Role extends Model
         }
 
         $rolePermissionCollection = $this->Permissions;
-        $rolePermissionCollection->filter($filter);
-        $rolePermissionCollection->addSort("Permission.PermissionPath", false);
+        if ($rolePermissionCollection) {
+            $rolePermissionCollection->filter($filter);
+            $rolePermissionCollection->addSort("Permission.PermissionPath", false);
+        }
 
-        if (count($rolePermissionCollection) > 0) {
+        if ($rolePermissionCollection && count($rolePermissionCollection) > 0) {
             $assignedPermission = $rolePermissionCollection[0];
             return $assignedPermission->Access == "Allowed";
         }

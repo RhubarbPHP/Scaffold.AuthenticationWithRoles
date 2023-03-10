@@ -24,6 +24,15 @@ use Rhubarb\Stem\Schema\Columns\ForeignKeyColumn;
 use Rhubarb\Stem\Schema\Columns\StringColumn;
 use Rhubarb\Stem\Schema\ModelSchema;
 
+/**
+ *
+ *
+ * @property int $PermissionID Repository field
+ * @property string $PermissionName Repository field
+ * @property string $PermissionPath Repository field
+ * @property int $ParentPermissionID Repository field
+ * @property-read PermissionAssignment[]|\Rhubarb\Stem\Collections\Collection $Assignments Relationship
+ */
 class Permission extends Model
 {
     protected function createSchema()
